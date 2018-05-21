@@ -124,7 +124,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     """
     # TODO: Implement function
     for epoch in range(epochs):
-        print("EPOCH {} ...".format(i+1))
+        print("EPOCH {} ...".format(epoch))
         for image,lable in get_batches_fn(batch_size):
             sess.run(train_op, feed_dict={x: image, y: lable})
             quicky, loss = sess.run([train_op, cross_entropy_loss], 
@@ -166,7 +166,7 @@ def run():
 
 
         # TODO: Train NN using the train_nn function
-        epochs = 10
+        epochs = 5
         batch_size = 5
 
         # TF placeholders
