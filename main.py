@@ -126,12 +126,17 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     sess.run(tf.global_variables_initializer())
 
     for epoch in range(epochs):
-        print("EPOCH {} ...".format(epoch))
+        print('Epoch ' , epoch+1, '\n')
+        sum_loss = 0
+        loss_count = 0
         for image,label in get_batches_fn(batch_size):
-            _, loss = sess.run([train_op, cross_entropy_loss], 
-                feed_dict={input_image: image, correct_label: label, keep_prob: 0.5, learning_rate: 0.0010})
-            print("Loss: = {:.3f}".format(loss))
-        print()
+            loss_count +=1
+            _, loss = sess.run([train_op, cross_entropy_loss],
+                feed_dict={input_image: image, correct_label: label, keep_prob: 0.5, learning_rate: 0.001})
+            print('Loss : ', loss)
+            sum_loss +=loss
+        print('Average loss for this epoch is ',sum_loss/loss_count )
+        print('\n')
 tests.test_train_nn(train_nn)
 
 
@@ -158,23 +163,21 @@ def run():
         # OPTIONAL: Augment Images for better results
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
-        # TF placeholders
-        correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes], name='correct_label')
-        learning_rate = tf.placeholder(tf.float32, name='learning_rate')
 
         # TODO: Build NN using load_vgg, layers, and optimize function
         input_image, keep_prob, vgg_layer3_out, vgg_layer4_out, vgg_layer7_out = load_vgg(sess, vgg_path)
 
         nn_last_layer = layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes)
 
+        # Setting up placeholders
+        correct_label = tf.placeholder(tf.int32, [None, None, None, num_classes], name='correct_label')
+        learning_rate = tf.placeholder(tf.float32, name='learning_rate')
+
         logits, train_op, cross_entropy_loss = optimize(nn_last_layer, correct_label, learning_rate, num_classes)
 
-
         # TODO: Train NN using the train_nn function
-        epochs = 5
+        epochs = 50
         batch_size = 5
-
-
 
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
              correct_label, keep_prob, learning_rate)
