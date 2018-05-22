@@ -132,7 +132,7 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
         for image,label in get_batches_fn(batch_size):
             loss_count +=1
             _, loss = sess.run([train_op, cross_entropy_loss],
-                feed_dict={input_image: image, correct_label: label, keep_prob: 0.5, learning_rate: 0.001})
+                feed_dict={input_image: image, correct_label: label, keep_prob: 0.3, learning_rate: 0.001})
             print('Loss : ', loss)
             sum_loss +=loss
         print('Average loss for this epoch is ',sum_loss/loss_count )
@@ -176,8 +176,8 @@ def run():
         logits, train_op, cross_entropy_loss = optimize(nn_last_layer, correct_label, learning_rate, num_classes)
 
         # TODO: Train NN using the train_nn function
-        epochs = 50
-        batch_size = 5
+        epochs = 100
+        batch_size = 10
 
         train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_loss, input_image,
              correct_label, keep_prob, learning_rate)
